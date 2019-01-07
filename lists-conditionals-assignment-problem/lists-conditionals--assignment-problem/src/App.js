@@ -1,22 +1,44 @@
 import React, { Component } from 'react';
 import './App.css';
+import Validation from './Validation/Validation';
+import Char from './Char/Char';
 
 class App extends Component {
   state = {
+    text: '',
     lengthString: 0
   }
 
   onChangeHandler = (event) => {
-    const lengthString = event.target.value.length;
+    this.setState({
+      text: event.target.value,
+      lengthString: event.target.value.length
+    })
+  }
 
-    this.setState({lengthString: lengthString})
+  onDeleteHandler = (charIndex) => {
+    const arrayText = this.state.text.split('');
+    arrayText.splice(charIndex, 1);
+    const newText = arrayText.join('');
+    this.setState({
+      text: newText
+    });
   }
 
   render() {
+    const characters = this.state.text.split('');
+    const outputChars = characters.map((char, index) => {
+      return <Char key={char + index} char={char} click={() => this.onDeleteHandler(index)} />
+    });
     return (
       <div className="App">
-        <input type="text" onChange={(event) => this.onChangeHandler(event)} />
+        <input type="text" onChange={(event) => this.onChangeHandler(event)}
+          value={this.state.text} />
         <p>The length of the string is: {this.state.lengthString}</p>
+        <Validation text={this.state.text} />
+        <div>
+          {outputChars}
+        </div>
         <br />
         <br />
         <ol>
